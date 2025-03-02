@@ -1,1 +1,781 @@
-<h1>Hello World </h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoViz - Interactive Algorithms & Data Structures</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --accent: #e74c3c;
+            --text: #333;
+            --bg: #f9f9f9;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        nav {
+            background-color: var(--dark);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        nav ul li {
+            margin: 0 1rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        section {
+            padding: 4rem 0;
+        }
+        
+        h1, h2, h3 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+        
+        p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #27ae60;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-img {
+            height: 200px;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .canvas-container {
+            width: 100%;
+            height: 400px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #sortingCanvas, #graphCanvas, #treeCanvas, #hashCanvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 2rem;
+        }
+        
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+        }
+        
+        .featured-section {
+            background-color: var(--light);
+            padding: 4rem 0;
+        }
+        
+        .project-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .project-card {
+            flex: 1 1 400px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .project-img {
+            height: 250px;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .project-body {
+            padding: 1.5rem;
+        }
+        
+        .challenges-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .challenge-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .challenge-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .easy {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .medium {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .hard {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .playground {
+            display: flex;
+            flex-direction: column;
+            margin-top: 2rem;
+        }
+        
+        .code-editor {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            font-family: monospace;
+            resize: vertical;
+        }
+        
+        .analogy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .analogy-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .analogy-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .analogy-img {
+            height: 150px;
+            background-color: var(--primary);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>AlgoViz</h1>
+            <p>Interactive Data Structures & Algorithms Visualizations</p>
+        </div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#visualizations">Visualizations</a></li>
+            <li><a href="#challenges">Coding Challenges</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#gamification">Gamification</a></li>
+            <li><a href="#analogies">Analogies</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+    </nav>
+    
+    <section id="visualizations">
+        <div class="container">
+            <h2>Interactive Visualizations</h2>
+            <p>Explore algorithm and data structure concepts through interactive visualizations. Watch how different algorithms work step-by-step and understand their time and space complexity.</p>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="sorting">Sorting Algorithms</div>
+                <div class="tab" data-tab="graph">Graph Traversal</div>
+                <div class="tab" data-tab="tree">Tree Operations</div>
+                <div class="tab" data-tab="hash">Hash Tables</div>
+            </div>
+            
+            <div class="tab-content active" id="sorting-tab">
+                <div class="controls">
+                    <select id="sortingAlgorithm" class="btn">
+                        <option value="bubble">Bubble Sort</option>
+                        <option value="insertion">Insertion Sort</option>
+                        <option value="selection">Selection Sort</option>
+                        <option value="quick">Quick Sort</option>
+                        <option value="merge">Merge Sort</option>
+                    </select>
+                    <button id="generateSortArray" class="btn">Generate New Array</button>
+                    <button id="startSort" class="btn btn-secondary">Start Sorting</button>
+                </div>
+                <div class="canvas-container">
+                    <div id="sortingCanvas"></div>
+                </div>
+                <h3>How It Works</h3>
+                <p>Watch as the algorithm sorts the array in real-time. The height of each bar represents the value, and the color changes indicate which elements are being compared or swapped.</p>
+                <p>Time Complexity: <span id="sortingComplexity">O(n²) for Bubble Sort</span></p>
+                <p>Space Complexity: <span id="sortingSpace">O(1) for Bubble Sort</span></p>
+            </div>
+            
+            <div class="tab-content" id="graph-tab">
+                <div class="controls">
+                    <select id="graphAlgorithm" class="btn">
+                        <option value="bfs">Breadth-First Search</option>
+                        <option value="dfs">Depth-First Search</option>
+                        <option value="dijkstra">Dijkstra's Algorithm</option>
+                        <option value="kruskal">Kruskal's MST</option>
+                    </select>
+                    <button id="generateGraph" class="btn">Generate New Graph</button>
+                    <button id="startGraphAlgo" class="btn btn-secondary">Start Algorithm</button>
+                </div>
+                <div class="canvas-container">
+                    <div id="graphCanvas"></div>
+                </div>
+                <h3>How It Works</h3>
+                <p>The visualization shows how graph traversal algorithms explore nodes and edges. Different colors represent visited nodes, current node, and the path being considered.</p>
+                <p>Time Complexity: <span id="graphComplexity">O(V + E) for BFS</span></p>
+                <p>Space Complexity: <span id="graphSpace">O(V) for BFS</span></p>
+            </div>
+            
+            <div class="tab-content" id="tree-tab">
+                <div class="controls">
+                    <select id="treeOperation" class="btn">
+                        <option value="avl">AVL Tree Rotations</option>
+                        <option value="bst">BST Operations</option>
+                        <option value="huffman">Huffman Coding</option>
+                        <option value="heap">Heap Operations</option>
+                    </select>
+                    <input type="text" id="treeInput" placeholder="Enter value" class="btn">
+                    <button id="treeInsert" class="btn">Insert</button>
+                    <button id="treeDelete" class="btn">Delete</button>
+                    <button id="treeReset" class="btn btn-secondary">Reset Tree</button>
+                </div>
+                <div class="canvas-container">
+                    <div id="treeCanvas"></div>
+                </div>
+                <h3>How It Works</h3>
+                <p>This visualization demonstrates tree operations such as insertions, deletions, and rotations. Watch how the tree maintains its structure through various operations.</p>
+                <p>Time Complexity: <span id="treeComplexity">O(log n) for balanced trees</span></p>
+                <p>Space Complexity: <span id="treeSpace">O(n) for tree structure</span></p>
+            </div>
+            
+            <div class="tab-content" id="hash-tab">
+                <div class="controls">
+                    <select id="hashMethod" class="btn">
+                        <option value="chaining">Chaining</option>
+                        <option value="linear">Linear Probing</option>
+                        <option value="quadratic">Quadratic Probing</option>
+                        <option value="double">Double Hashing</option>
+                    </select>
+                    <input type="text" id="hashInput" placeholder="Enter key" class="btn">
+                    <input type="text" id="hashValue" placeholder="Enter value" class="btn">
+                    <button id="hashInsert" class="btn">Insert</button>
+                    <button id="hashSearch" class="btn">Search</button>
+                    <button id="hashReset" class="btn btn-secondary">Reset Table</button>
+                </div>
+                <div class="canvas-container">
+                    <div id="hashCanvas"></div>
+                </div>
+                <h3>How It Works</h3>
+                <p>See how hash tables handle collisions using different methods. The visualization shows the distribution of keys and the effect of different collision resolution strategies.</p>
+                <p>Time Complexity: <span id="hashComplexity">O(1) average case, O(n) worst case</span></p>
+                <p>Space Complexity: <span id="hashSpace">O(n)</span></p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="challenges" class="featured-section">
+        <div class="container">
+            <h2>Coding Challenges & Practice</h2>
+            <p>Sharpen your algorithm skills with a curated collection of coding challenges. From basic data structure operations to advanced algorithmic problems.</p>
+            
+            <div class="challenges-container">
+                <div class="challenge-card">
+                    <div class="difficulty easy">Easy</div>
+                    <h3>Reverse a Linked List</h3>
+                    <p>Implement a function to reverse a singly linked list in-place.</p>
+                    <a href="#" class="btn">Start Challenge</a>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="difficulty medium">Medium</div>
+                    <h3>Implement a Queue using Stacks</h3>
+                    <p>Create a queue data structure using only stack operations.</p>
+                    <a href="#" class="btn">Start Challenge</a>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="difficulty hard">Hard</div>
+                    <h3>LRU Cache Implementation</h3>
+                    <p>Design and implement an LRU (Least Recently Used) cache with O(1) operations.</p>
+                    <a href="#" class="btn">Start Challenge</a>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="difficulty medium">Medium</div>
+                    <h3>Binary Search Tree Validator</h3>
+                    <p>Write a function to determine if a given binary tree is a valid BST.</p>
+                    <a href="#" class="btn">Start Challenge</a>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="difficulty hard">Hard</div>
+                    <h3>Dynamic Programming: Coin Change</h3>
+                    <p>Find the minimum number of coins needed to make a given amount of change.</p>
+                    <a href="#" class="btn">Start Challenge</a>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="difficulty easy">Easy</div>
+                    <h3>Implement a Hash Table</h3>
+                    <p>Build a simple hash table from scratch with basic operations.</p>
+                    <a href="#" class="btn">Start Challenge</a>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 3rem;">Coding Playground</h3>
+            <div class="playground">
+                <textarea class="code-editor" placeholder="// Write your code here...
+function reverseLinkedList(head) {
+    let prev = null;
+    let current = head;
+    let next = null;
+    
+    while (current !== null) {
+        next = current.next;
+        current.next = prev;
+        prev = current;
+        current = next;
+    }
+    
+    return prev;
+}"></textarea>
+                <div class="controls">
+                    <button id="runCode" class="btn btn-secondary">Run Code</button>
+                    <button id="resetCode" class="btn">Reset</button>
+                </div>
+                <div id="codeOutput" style="margin-top: 1rem; padding: 1rem; background-color: #f5f5f5; border-radius: 8px; font-family: monospace;">
+                    // Output will appear here...
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="projects">
+        <div class="container">
+            <h2>Real-World Projects</h2>
+            <p>Explore full-fledged applications that apply data structures and algorithms to solve real-world problems. Each project comes with code, explanations, and interactive demos.</p>
+            
+            <div class="project-showcase">
+                <div class="project-card">
+                    <div class="project-img">Pathfinding App</div>
+                    <div class="project-body">
+                        <h3>Pathfinding Visualization</h3>
+                        <p>An interactive map application that demonstrates various pathfinding algorithms including A*, Dijkstra's, and BFS. Users can place obstacles and see how different algorithms navigate around them.</p>
+                        <p><strong>Algorithms used:</strong> A*, Dijkstra's Algorithm, BFS</p>
+                        <p><strong>Data structures:</strong> Priority Queue, Graph, Hash Map</p>
+                        <a href="#" class="btn">View Project</a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-img">Compression Tool</div>
+                    <div class="project-body">
+                        <h3>Text Compression Tool</h3>
+                        <p>A file compression utility that implements Huffman coding to reduce text file sizes. The application displays the compression process step-by-step and shows the resulting compression ratio.</p>
+                        <p><strong>Algorithms used:</strong> Huffman Coding, LZ77</p>
+                        <p><strong>Data structures:</strong> Binary Tree, Priority Queue, Hash Map</p>
+                        <a href="#" class="btn">View Project</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-showcase" style="margin-top: 2rem;">
+                <div class="project-card">
+                    <div class="project-img">Social Network</div>
+                    <div class="project-body">
+                        <h3>Social Network Analyzer</h3>
+                        <p>A tool for analyzing social connections using graph algorithms. Visualize friend networks, calculate degrees of separation, find mutual connections, and identify community clusters.</p>
+                        <p><strong>Algorithms used:</strong> BFS, Community Detection, Centrality Measures</p>
+                        <p><strong>Data structures:</strong> Graph (Adjacency Lists), Queue, Set</p>
+                        <a href="#" class="btn">View Project</a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-img">Cache System</div>
+                    <div class="project-body">
+                        <h3>LRU Cache Simulation</h3>
+                        <p>A real-time demonstration of how an LRU (Least Recently Used) cache works. Watch as the system manages memory allocation and eviction policies when handling requests.</p>
+                        <p><strong>Algorithms used:</strong> LRU Policy, Hash Function</p>
+                        <p><strong>Data structures:</strong> Hash Map, Doubly Linked List</p>
+                        <a href="#" class="btn">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="gamification" class="featured-section">
+        <div class="container">
+            <h2>Gamification</h2>
+            <p>Learn data structures and algorithms through fun, interactive games and puzzles. Apply algorithm concepts to solve entertaining challenges.</p>
+            
+            <div class="grid">
+                <div class="card">
+                    <div class="card-img" style="background-color: #e74c3c;">Sudoku Solver</div>
+                    <div class="card-body">
+                        <h3 class="card-title">Sudoku with Backtracking</h3>
+                        <p>Play Sudoku and watch how a backtracking algorithm can efficiently solve even the most difficult puzzles. Toggle between manual play and algorithm visualization.</p>
+                        <a href="#" class="btn">Play Now</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-img" style="background-color: #f39c12;">Tower of Hanoi</div>
+                    <div class="card-body">
+                        <h3 class="card-title">Tower of Hanoi</h3>
+                        <p>Solve the classic Tower of Hanoi puzzle while learning about recursive algorithms. Adjust the number of disks to increase the challenge.</p>
+                        <a href="#" class="btn">Play Now</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-img" style="background-color: #9b59b6;">Chess AI</div>
+                    <div class="card-body">
+                        <h3 class="card-title">Chess with Minimax</h3>
+                        <p>Play chess against an AI opponent powered by the minimax algorithm with alpha-beta pruning. Adjust the difficulty by changing the search depth.</p>
+                        <a href="#" class="btn">Play Now</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-img" style="background-color: #2ecc71;">Maze Solver</div>
+                    <div class="card-body">
+                        <h3 class="card-title">Maze Generator & Solver</h3>
+                        <p>Create your own mazes and watch different algorithms (DFS, BFS, A*) race to find the solution. Learn about the trade-offs between different search strategies.</p>
+                        <a href="#" class="btn">Play Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="analogies">
+        <div class="container">
+            <h2>Analogies & Physical Simulations</h2>
+            <p>Understand abstract data structures through real-world analogies and physical representations. These visual explanations help bridge the gap between theory and application.</p>
+            
+            <div class="analogy-grid">
+                <div class="analogy-item">
+                    <div class="analogy-img">Stacks</div>
+                    <h3>Stack of Books</h3>
+                    <p>Visualize a stack data structure as a physical stack of books. Books can only be added or removed from the top, demonstrating LIFO (Last In, First Out) behavior.</p>
+                    <p>See how operations like push (add a book) and pop (remove the top book) work in this physical analogy.</p>
+                    <a href="#" class="btn">Explore Analogy</a>
+                </div>
+                
+                <div class="analogy-item">
+                    <div class="analogy-img">Linked Lists</div>
+                    <h3>Paper Chain Links</h3>
+                    <p>Understand linked lists through a chain of paper cards connected by strings. Each card represents a node with data, and the strings represent pointers to the next node.</p>
+                    <p>See how insertions, deletions, and traversals work by manipulating the physical chain.</p>
+                    <a href="#" class="btn">Explore Analogy</a>
+                </div>
+                
+                <div class="analogy-item">
+                    <div class="analogy-img">Sorting</div>
+                    <h3>Card Sorting</h3>
+                    <p>Watch a step-by-step demonstration of sorting algorithms using a deck of cards. From the simple Bubble Sort to the efficient Merge Sort, see how each algorithm arranges cards in order.</p>
+                    <p>This physical simulation helps visualize the operations and comparisons made by different sorting techniques.</p>
+                    <a href="#" class="btn">Explore Analogy</a>
+                </div>
+                
+                <div class="analogy-item">
+                    <div class="analogy-img">Graphs</div>
+                    <h3>String Network</h3>
+                    <p>Visualize graph structures with a physical web of strings connecting nodes (represented by pins). See how different graph types (directed, undirected, weighted) can be represented.</p>
+                    <p>Follow the strings to understand graph traversal algorithms like BFS and DFS.</p>
+                    <a href="#" class="btn">Explore Analogy</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="about" class="featured-section">
+        <div class="container">
+            <h2>About AlgoViz</h2>
+            <p>AlgoViz is a personal project aimed at making data structures and algorithms accessible and engaging through interactive visualizations, challenges, and real-world applications.</p>
+            <p>My goal is to bridge the gap between theoretical knowledge and practical implementation, helping programmers at all levels deepen their understanding of fundamental computer science concepts.</p>
+            
+            <h3>Features</h3>
+            <ul style="margin-left: 2rem; margin-bottom: 2rem;">
+                <li>Interactive visualizations of key algorithms and data structures</li>
+                <li>Practice challenges with integrated code editor</li>
+                <li>Real-world projects demonstrating practical applications</li>
+                <li>Game-based learning through algorithm puzzles</li>
+                <li>Physical analogies to simplify complex concepts</li>
+            </ul>
+            
+            <a href="#" class="btn">Contact Me</a>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AlgoViz - Interactive Data Structures & Algorithms</p>
+            <div class="social-links">
+                <a href="#">GitHub</a>
+                <a href="#">LinkedIn</a>
+                <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Basic tab functionality
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+                
+                // Remove active class from all tabs and contents
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to selected tab and content
